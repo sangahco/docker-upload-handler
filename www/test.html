@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Html5 File Upload + Nginx</title>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+</head>
+
+<body>
+	
+	<form method="post" enctype="multipart/form-data" >
+		<input type="file" name="upload" multiple class="input_file" />
+		
+		<button class="btn_upload" type="button" >Upload</button>
+	</form>
+	
+	<table>
+		<tr>
+			<td id="progress"></td>
+			<td id="tempfile"></td>
+			<td id="filepath"></td>
+			<td id="filesize"></td>
+		</tr>
+	</table>
+	
+	
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script>
+(function(){
+	"use strict";
+	
+	$(".input_file").on('change', function (){ 
+		handleMultiFileSelect.apply(this, arguments) 
+	});
+	$('.btn_upload').on('click', function (){ 
+		upload.apply(this, arguments) 
+	});
+	
+	var uploads = [];
+	
+	var handleMultiFileSelect = function(obj) {
+		
+		// reset container
+		uploads = [];
+		
+		var files
+		if(obj.target) {
+			files = obj.target.files;
+		} else {
+			files = obj;
+		}
+		
+		console.log(files);
+
+		for ( var i = 0; i < files.length; i++) {
+			var file = files[i];
+			
+			uploads.push(file);
+		}
+	}
+	
+	function upload(){
+		//multipartUpload();
+		binaryUpload();
+	}
+		
+	function binaryUpload(){
+		var file = uploads[0];
+		
+		var qstr = $.param({
+			"filename": file.name,
+			"filesize": file.size,
+			"conttype": file.type
+		});
+		
+		var xhr = new XMLHttpRequest();
+		
+		xhr.upload.addEventListener("progress", function(e) {
+			var pc = parseInt(e.loaded / e.total * 100);
+			$('#progress').text(pc);
+		});
+		
+		xhr.open("POST", "/upload?" + qstr);
+		xhr.overrideMimeType('text/plain; charset=x-user-defined-binary');
+		//xhr.setRequestHeader('Content-Type', file.type);
+		
+		xhr.send(file);
+	}
+	
+	function multipartUpload(){
+		var formData = new FormData(),
+		file = uploads[0],
+		xhr = new XMLHttpRequest();
+		
+		formData.append('file', file);
+		xhr.open('POST', '/upload');
+		xhr.send(formData);
+	}
+	
+	function jqueryBinaryUpload(){
+		var file = uploads[0];
+		
+		var qstr = $.param({
+			"filename": file.name,
+			"filesize": file.size,
+			"conttype": file.type
+		});
+		
+		$.ajax({
+			url: "/upload?" + qstr,
+			data: file,
+			cache: false,
+			contentType: file.type,
+			processData: false,
+			type: 'POST',
+			dataType: "json",
+			success: function(data){
+				console.log(data);
+			},
+			xhr: function(){
+				var xhr = new window.XMLHttpRequest();
+				
+				xhr.upload.addEventListener("progress", function(e) {
+					var pc = parseInt(e.loaded / e.total * 100);
+					$('#progress').text(pc);
+				}, false);
+				
+				xhr.addEventListener("load", function(){
+					
+				}, false);
+				
+				xhr.addEventListener("error", function(){
+					
+				}, false);
+				
+				xhr.addEventListener("abort", function(){
+					
+				}, false);
+				
+				return xhr;
+			}
+		});
+	}
+	
+})();
+</script>
+</body>
+</html>
