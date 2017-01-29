@@ -4,7 +4,6 @@ FROM nginx:alpine
 COPY . /setup
 
 VOLUME /etc/nginx/www
-VOLUME /tmp
 
 EXPOSE "8180"
 

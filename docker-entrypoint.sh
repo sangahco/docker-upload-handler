@@ -1,7 +1,9 @@
 #!/bin/sh
 set -e
 
-cp -r /setup /etc/nginx
-rm -rf /setup
+if [ -d "/setup" ]; then
+    cp -r /setup /etc/nginx
+    rm -rf /setup
+fi
 
 exec nginx -g 'daemon off;'
