@@ -2,8 +2,10 @@
 set -e
 
 if [ -d "/setup" ]; then
-    cp -r /setup /etc/nginx
+    echo "Copying setup configuration..."
+    cp -r /setup/* /etc/nginx
     rm -rf /setup
 fi
 
+echo "Starting nginx daemon..."
 exec nginx -g 'daemon off;'

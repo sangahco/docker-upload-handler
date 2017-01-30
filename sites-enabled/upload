@@ -2,7 +2,7 @@ server {
 	listen 8180;
 	server_name '';
 	index index.html index.php;
-	root www;
+	root /etc/nginx/www;
 
 	location / { 
 		allow all; 
