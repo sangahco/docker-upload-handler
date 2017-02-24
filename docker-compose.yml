@@ -4,15 +4,10 @@ services:
 
   upload:
     build: .
-    image: pmis-fileupload
-    expose:
-    - "8180"
     ports:
     - "18180:8180"
     volumes:
     - ngx:/etc/nginx/www
-    links:
-    - php
 
   php:
     image: php:5.6-fpm
