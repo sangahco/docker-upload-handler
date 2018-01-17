@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:1.12-alpine
 
 #COPY . /etc/nginx/
 COPY . /setup
