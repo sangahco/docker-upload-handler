@@ -1,4 +1,4 @@
-FROM nginx:1.12-alpine
+FROM sangah/nginx-base
 
 #COPY . /etc/nginx/
 COPY . /setup

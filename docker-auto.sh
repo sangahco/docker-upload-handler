@@ -30,11 +30,11 @@ install_docker_compose() {
     return 0
 }
 
-if ! command -v docker-compose >/dev/null 2>&1; then
-    install_docker_compose || true
-elif [[ "$(docker-compose version --short)" != "$DOCKER_COMPOSE_VERSION" ]]; then
-    install_docker_compose || true
-fi
+# if ! command -v docker-compose >/dev/null 2>&1; then
+#     install_docker_compose || true
+# elif [[ "$(docker-compose version --short)" != "$DOCKER_COMPOSE_VERSION" ]]; then
+#     install_docker_compose || true
+# fi
 
 usage() {
 echo "Usage:  $(basename "$0") [MODE] [OPTIONS] [COMMAND]"
@@ -83,9 +83,9 @@ if [ "$1" == "login" ]; then
     exit 0
 
 elif [ "$1" == "up" ]; then
-    docker-compose $CONF_ARG pull
-    docker-compose $CONF_ARG build --pull
-    docker-compose $CONF_ARG up -d --remove-orphans
+    docker compose $CONF_ARG pull
+    docker compose $CONF_ARG build --pull
+    docker compose $CONF_ARG up -d --remove-orphans
     exit 0
 
 elif [ "$1" == "stop-all" ]; then
@@ -100,9 +100,9 @@ elif [ "$1" == "remove-all" ]; then
 
 elif [ "$1" == "logs" ]; then
     shift
-    docker-compose $CONF_ARG logs -f --tail 200 "$@"
+    docker compose $CONF_ARG logs -f --tail 200 "$@"
     exit 0
 
 fi
 
-docker-compose $CONF_ARG "$@"
+docker compose $CONF_ARG "$@"
